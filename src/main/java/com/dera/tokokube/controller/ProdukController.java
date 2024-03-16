@@ -1,0 +1,53 @@
+package com.dera.tokokube.controller;
+
+import java.util.List;
+
+import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.dera.tokokube.entity.Produk;
+import com.dera.tokokube.services.ProdukService;
+
+// http://localhost:8080/api/produks
+
+@RestController
+@RequestMapping("/api")
+public class ProdukController {
+
+    @Autowired
+    private ProdukService produkService;
+
+    @GetMapping("/produks")
+    public List<Produk> findAll() {
+        return produkService.findAll();
+    }
+
+    @GetMapping("/produks/{id}")
+    public Produk findById(@PathVariable("id") String id) {
+        return produkService.findById(id);
+    }
+
+    @PostMapping("/produks")
+    public Produk create(@RequestBody Produk produk) throws BadRequestException {
+        return produkService.create(produk);
+    }
+
+    @PutMapping("/produks")
+    public Produk edit(@RequestBody Produk produk) {
+        return produkService.edit(produk);
+    }
+
+    @DeleteMapping("/produks/{id}")
+    public void deleteById(@PathVariable("id") String id) {
+        produkService.deleteById(id);
+    }
+
+}
