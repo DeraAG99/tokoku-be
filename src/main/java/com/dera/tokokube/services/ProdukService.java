@@ -62,7 +62,36 @@ public class ProdukService {
         return produkRepository.save(produk);
     }
 
-    public Produk edit(Produk produk) {
+    public Produk edit(Produk produk) throws BadRequestException {
+        // Validasi request
+
+        if (!StringUtils.hasText(produk.getId())) {
+            throw new BadRequestException("ID produk tidak boleh kosong");
+        }
+
+        if (!StringUtils.hasText(produk.getNama())) {
+            throw new BadRequestException("Nama produk tidak boleh kosong");
+        }
+
+        if (produk.getKategori() == null) {
+            throw new BadRequestException("Kategori produk tidak boleh kosong");
+        }
+
+        if (!StringUtils.hasText(produk.getKategori().getId())) {
+            throw new BadRequestException("Kategori ID tidak boleh kosong");
+        }
+
+        if (produk.getStok() < 1 || produk.getStok() == null) {
+            throw new BadRequestException("Stok tidak boleh kosong");
+        }
+
+        if (produk.getHarga() == null || produk.getHarga().signum() < 1) {
+            throw new BadRequestException("Harga tidak boleh kosong");
+        }
+
+        kategoriRepository.findById(produk.getKategori().getId())
+                .orElseThrow(() -> new BadRequestException(
+                        "Kategori ID " + produk.getKategori().getId() + " tidak ditemukan di database"));
         return produkRepository.save(produk);
     }
 

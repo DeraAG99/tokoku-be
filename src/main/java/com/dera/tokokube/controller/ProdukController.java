@@ -41,7 +41,7 @@ public class ProdukController {
     }
 
     @PutMapping("/produks")
-    public Produk edit(@RequestBody Produk produk) {
+    public Produk edit(@RequestBody Produk produk) throws BadRequestException {
         return produkService.edit(produk);
     }
 
