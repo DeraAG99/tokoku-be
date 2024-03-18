@@ -1,5 +1,6 @@
 package com.dera.tokokube.exceptions;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -7,25 +8,35 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.dera.tokokube.model.ExceptionResponse;
+
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
+    // Inject exception model (Exception Response)
+    @Autowired
+    ExceptionResponse exceptionResponse;
+
     @ExceptionHandler(value = { BadRequestException.class })
     protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
-        String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse, null, HttpStatus.BAD_REQUEST, request);
+        exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { ResourceNotFoundException.class })
     protected ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse, null, HttpStatus.NOT_FOUND, request);
+        exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     // Handler untuk pengecualian umum
     @ExceptionHandler(value = { Exception.class })
     protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
-        String bodyOfResponse = "Internal Server Error";
-        return handleExceptionInternal(ex, bodyOfResponse, null, HttpStatus.INTERNAL_SERVER_ERROR, request);
+        exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
