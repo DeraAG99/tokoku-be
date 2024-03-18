@@ -7,9 +7,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Pengguna implements Serializable {
 
     @Id
@@ -22,4 +24,9 @@ public class Pengguna implements Serializable {
     private String hp;
     private String roles;
     private Boolean isAktif;
+
+    public Pengguna(String username) {
+        // TODO Auto-generated constructor stub
+        this.id = username;
+    }
 }

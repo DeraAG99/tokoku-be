@@ -2,7 +2,7 @@ package com.dera.tokokube.controller;
 
 import java.util.List;
 
-import org.apache.coyote.BadRequestException;
+import com.dera.tokokube.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;

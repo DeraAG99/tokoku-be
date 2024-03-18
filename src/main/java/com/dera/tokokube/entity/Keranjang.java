@@ -29,4 +29,5 @@ public class Keranjang implements Serializable {
     private BigDecimal jumlah;
     @Temporal(TemporalType.TIMESTAMP)
     private Date waktuBuat;
+
 }

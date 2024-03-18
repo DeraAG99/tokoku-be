@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.dera.tokokube.exceptions.BadRequestException;
 import com.dera.tokokube.security.service.UserDetailsImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
