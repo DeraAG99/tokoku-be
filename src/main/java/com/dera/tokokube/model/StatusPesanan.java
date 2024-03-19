@@ -1,5 +1,5 @@
 package com.dera.tokokube.model;
 
 public enum StatusPesanan {
-    DRAFT, PEMBAYARAN, PACKING, PENGIRIMAN, SELESAI
+    DRAFT, PEMBAYARAN, PACKING, PENGIRIMAN, SELESAI, DIBATALKAN
 }
