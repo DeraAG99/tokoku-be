@@ -12,26 +12,26 @@ import lombok.Data;
 
 @Component
 @Data
-public class ExceptionResponse implements Serializable {
+public class ApiResponse implements Serializable {
 
     private int code;
     private String status;
-    private Object errors;
+    private Object data;
+    private String message;
     private String timestamp;
     @JsonIgnore
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
-    // Buat constructor kosong untuk menghindari kesalahan injeksi dependensi
-    public ExceptionResponse() {
-
+    public ApiResponse() {
+        this.timestamp = LocalDateTime.now().format(formatter);;
     }
 
-    public ExceptionResponse(int code, String status, Object errors) {
-
+    public ApiResponse(int code, String status, Object data, String message) {
         this.code = code;
         this.status = status;
-        this.errors = errors;
-        this.timestamp = LocalDateTime.now().format(formatter);
+        this.data = data;
+        this.message = message;
+        this.timestamp = LocalDateTime.now().format(formatter);;
     }
+    
 }

@@ -1,6 +1,8 @@
 package com.dera.tokokube.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dera.tokokube.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,23 +29,27 @@ public class PenggunaService {
     }
 
     public Pengguna create(Pengguna pengguna) throws BadRequestException {
-
+        Map<String, String> errors = new HashMap<>();
         if (!StringUtils.hasText(pengguna.getId())) {
-            throw new BadRequestException("Username harus di isi");
+            errors.put("id", "Username harus di isi");
         }
 
         if (penggunaRepository.existsById(pengguna.getId())) {
-            throw new BadRequestException("Username " + pengguna.getId() + " sudah terdaftar");
+            errors.put("id", "Username " + pengguna.getId() + " sudah terdaftar");
         }
 
         if (!StringUtils.hasText(pengguna.getEmail())) {
-            throw new BadRequestException("Email harus diisi");
+            errors.put("email", "Email harus diisi");
         }
 
         if (penggunaRepository.existsByEmail(pengguna.getEmail())) {
-            throw new BadRequestException("Email " + pengguna.getEmail() + " sudah terdaftar");
+            errors.put("email", "Email " + pengguna.getEmail() + " sudah terdaftar");
         }
 
+        if (!errors.isEmpty()) {
+            throw new BadRequestException(errors);
+        }
+        
         pengguna.setIsAktif(true);
         return penggunaRepository.save(pengguna);
     }

@@ -1,6 +1,7 @@
-package com.dera.tokokube.exceptions;
+package com.dera.tokokube.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,6 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.dera.tokokube.exceptions.BadRequestException;
+import com.dera.tokokube.exceptions.ResourceNotFoundException;
+import com.dera.tokokube.model.ApiResponse;
 import com.dera.tokokube.model.ExceptionResponse;
 
 @ControllerAdvice
@@ -17,10 +21,13 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @Autowired
     ExceptionResponse exceptionResponse;
 
+    @Autowired
+    ApiResponse apiResponse;
+
     @ExceptionHandler(value = { BadRequestException.class })
     protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
         exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
+                HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase(), ex.getErrors());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
