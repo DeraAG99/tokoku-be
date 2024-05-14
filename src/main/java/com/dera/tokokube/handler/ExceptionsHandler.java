@@ -1,7 +1,8 @@
 package com.dera.tokokube.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,10 +25,13 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @Autowired
     ApiResponse apiResponse;
 
+    private final static Logger logger = LoggerFactory.getLogger(ExceptionsHandler.class);
+
     @ExceptionHandler(value = { BadRequestException.class })
     protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
         exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase(), ex.getErrors());
+        logger.error(ex.getErrors().toString());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
