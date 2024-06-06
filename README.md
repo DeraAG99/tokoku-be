@@ -46,13 +46,12 @@
 - Sebelum menjalankan Aplikasi mohon untuk menyesuaikan konfigurasi database [application.properties](Tokoku-be\src\main\resources\application.properties) file.
 - Update username dan password sesuai kan dengan config database yang berada di lokal komputer kamu.
 
-```
+  ```
     spring.application.name=tokoku-be
     spring.datasource.url=jdbc:postgresql://localhost:5432/tokoku
     spring.datasource.username=postgres
     spring.datasource.password=admin
-
-```
+  ```
 
 - Setelah menyesuaikan configurasi database kamu dapat melakukan build project melalui terminal :
   ```
