@@ -120,7 +120,7 @@
 - `PATCH /api/pesanans/{pesananId}/packing` : Admin packing pesanan.
 - `GET /api/pesanans/admin` : Menampilkan daftar pesanan.
 
-### Sample API Response untuk registrasi user
+## Sample API Response untuk registrasi user
 
 `POST  localhost:8080/auth/signup`
 
