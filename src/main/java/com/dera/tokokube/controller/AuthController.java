@@ -20,9 +20,11 @@ import com.dera.tokokube.entity.Pengguna;
 import com.dera.tokokube.model.ApiResponse;
 import com.dera.tokokube.model.JwtResponse;
 import com.dera.tokokube.model.LoginRequest;
+import com.dera.tokokube.model.RefreshTokenRequest;
 import com.dera.tokokube.model.SignupRequest;
 import com.dera.tokokube.security.jwt.JwtUtils;
 import com.dera.tokokube.security.service.UserDetailsImpl;
+import com.dera.tokokube.security.service.UserDetailsServiceImpl;
 import com.dera.tokokube.services.PenggunaService;
 
 @RestController
@@ -39,6 +41,9 @@ public class AuthController {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @Autowired
     JwtUtils jwtUtils;
 
     private final static Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -51,10 +56,10 @@ public class AuthController {
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
         String token = jwtUtils.generateJwtToken(authentication);
+        String refreshToken = jwtUtils.generateRefreshJwtToken(authentication);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        
         logger.info("Signin Succeed : {}", request.getUsername());
-        return ResponseEntity.ok().body(new JwtResponse(token, principal.getUsername(), principal.getEmail()));
+        return ResponseEntity.ok().body(new JwtResponse(token, refreshToken, principal.getUsername(), principal.getEmail(), principal.getRoles()));
     }
 
     // Register pengguna
@@ -68,6 +73,23 @@ public class AuthController {
         pengguna.setRoles("user");
         penggunaService.create(pengguna);
         logger.info("Signup Succeed : {}", request.getUsername());
-        return ResponseEntity.ok().body((new ApiResponse(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase().toUpperCase(), pengguna, "Account dengan username "+request.getUsername()+" berhasil dibuat")));
+        return ResponseEntity.ok().body((new ApiResponse(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase().toUpperCase(), pengguna)));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<JwtResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        String token = request.getRefreshToken();
+        boolean valid = jwtUtils.validateJwtToken(token);
+        if (!valid) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        String username = jwtUtils.getUsernameFromJwtToken(token);
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetailsImpl, null,
+                userDetailsImpl.getAuthorities());
+        String newToken = jwtUtils.generateJwtToken(authentication);
+        String refreshToken = jwtUtils.generateRefreshJwtToken(authentication);
+        return ResponseEntity.ok(new JwtResponse(newToken, refreshToken, username, userDetailsImpl.getEmail(), userDetailsImpl.getRoles()));
     }
 }
