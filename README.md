@@ -109,14 +109,14 @@ Tokoku Backend adalah proyek demo ecommerce yang menggunakan Spring Boot untuk m
 - `PATCH /api/penggunas/{id}` : Update data pengguna berdasarkan Id.
 - `DEL /api/penggunas/{id}` : Delete data pengguna berdasarkan Id.
 
-### Pesanan user Modole
+### Pesanan user Module
 
 - `POST /api/pesanans` : User membuat pesanan.
 - `PATCH /api/pesanans/{pesananId}/cancel` : User cancel pesanan.
 - `PATCH /api/pesanans/{pesananId}/terima` : User terima pesanan.
 - `GET /api/pesanans` : Menampilkan daftar pesanan.
 
-### Pesanan admin Modole
+### Pesanan admin Module
 
 - `PATCH /api/pesanans/{pesananId}/konfirmasi` : Admin konfirmasi pesanan.
 - `PATCH /api/pesanans/{pesananId}/packing` : Admin packing pesanan.
